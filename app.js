@@ -15,20 +15,17 @@ function getUrlVars(){
 	return vars;
 }
 
-jQuery(function($){$("#foo-table").DataTable({
-	order:[[0,"desc"]],
-	columnDefs:[
-	{
-		targets:0,
-		render:(data,type,row,meta)=>(type==="sort"||type==="type")?data:format(data)
-	},{
-		targets:1,
-		render:(data,type,row,meta)=>(type==='display')?'<a href="https://onlinejudge.u-aizu.ac.jp/status/users/'+data+'" target="_blank">'+data+'</a>':data
-	},{
-		targets:2,
-		render:(data,type,row,meta)=>(type==='display')?'<a href="https://onlinejudge.u-aizu.ac.jp/problems/'+data+'" target="_blank">'+data+'</a>':data
-	}],
-});})
+jQuery(($)=>{
+	$("#foo-table").DataTable({
+		order:[[0,"desc"]],
+		lengthMenu:[[20,50,100,-1],[20,50,100,"All"]],
+		columnDefs:[
+			{targets:0,render:(data,type,row,meta)=>(type==="sort"||type==="type")?data:format(data)},
+			{targets:1,render:(data,type,row,meta)=>(type==='display')?'<a href="https://onlinejudge.u-aizu.ac.jp/status/users/'+data+'" target="_blank">'+data+'</a> (<a href="http://judge.u-aizu.ac.jp/onlinejudge/user.jsp?id='+data+'#1" target="_blank">v1</a>)':data},
+			{targets:2,render:(data,type,row,meta)=>(type==='display')?'<a href="https://onlinejudge.u-aizu.ac.jp/problems/'+data+'" target="_blank">'+data+'</a> (<a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id='+data+'&lang=ja" target="_blank">v1</a>)':data}
+		]
+	});
+});
 
 window.onload = function () {
 	var parameters = getUrlVars();
@@ -37,20 +34,14 @@ window.onload = function () {
 		var request = new XMLHttpRequest();
 		request.open("GET","https://judgeapi.u-aizu.ac.jp/solutions/users/" + userID + "?page=0&size=999999999");
 		request.addEventListener("load",function (event) {
-			var solutions = JSON.parse(event.target.responseText)
-			solutions.forEach(solution => {
+			var solutions = JSON.parse(event.target.responseText).map(solution => {
 				var date = new Date(solution.submissionDate);
 				var userId = solution.userId;
 				var problemId = solution.problemId;
-				var newATag = function(ref,txt){
-					var aTag = document.createElement("a");
-					aTag.href = ref;
-					aTag.target = "_blank";
-					aTag.appendChild(document.createTextNode(txt));
-					return aTag;
-				}
-				$("#foo-table").dataTable().fnAddData([date, userId, problemId]);
+				var language = solution.language;
+				return [date, userId, problemId, language];
 			});
+			$("#foo-table").dataTable().fnAddData(solutions);
 		});
 		request.withCredentials = true;
 		request.send();

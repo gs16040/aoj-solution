@@ -3,10 +3,16 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>AIZU ONLINE JUDGE SOLUTIONS</title>
+		<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
+		<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 	</head>
 	<body>
-		<div id="table" style="font-size:small;"></div>
-		<div id="percent"><span id="percent-text"></span>％</div>
+		<div class="col-sm-12">
+			<table id="foo-table" class="table table-striped">
+				<thead><tr><th>TIME</th><th>USER</th><th>PROBLEM</th><th>LANG</th></tr></thead>
+				<tbody></tbody>
+			</table>
+		</div>
 	</body>
 </html>
