@@ -41,7 +41,9 @@ window.onload = function () {
 				var language = solution.language;
 				return [date, userId, problemId, language];
 			});
-			$("#foo-table").dataTable().fnAddData(solutions);
+			if(solutions.length > 0){
+				$("#foo-table").dataTable().fnAddData(solutions);
+			}
 		});
 		request.withCredentials = true;
 		request.send();
